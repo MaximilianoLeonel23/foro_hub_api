@@ -34,4 +34,8 @@ public class Issue {
         this.course = issue.course();
     }
 
+    public void update(IssueUpdateDTO issue) {
+        if (issue.title() != null) this.title = issue.title();
+        if (issue.message() != null) this.message = issue.message();
+    }
 }

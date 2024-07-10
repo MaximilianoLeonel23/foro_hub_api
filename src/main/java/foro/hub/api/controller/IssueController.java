@@ -1,9 +1,6 @@
 package foro.hub.api.controller;
 
-import foro.hub.api.domain.issues.Issue;
-import foro.hub.api.domain.issues.IssueRegistryDTO;
-import foro.hub.api.domain.issues.IssueRepository;
-import foro.hub.api.domain.issues.IssueResponseDTO;
+import foro.hub.api.domain.issues.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/issues")
@@ -56,9 +54,27 @@ public class IssueController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<IssueResponseDTO> updateIssue(@RequestBody @Valid )
+    public ResponseEntity<IssueResponseDTO> updateIssue(@RequestBody @Valid IssueUpdateDTO issueUpdateDTO, @PathVariable Long id) {
+        Optional<Issue> issueFound = issueRepository.findById(id);
+        if (issueFound.isPresent()) {
+            Issue issue = issueFound.get();
+            issue.update(issueUpdateDTO);
+            issueRepository.save(issue);
+            return ResponseEntity.ok(new IssueResponseDTO(
+                    issue.getId(),
+                    issue.getTitle(),
+                    issue.getMessage(),
+                    issue.getCreated_at(),
+                    issue.getStatus(),
+                    issue.getAuthor(),
+                    issue.getCourse()
+            ));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 
 }

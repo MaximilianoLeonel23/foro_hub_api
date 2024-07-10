@@ -1,0 +1,1 @@
+alter table issues modify column created_at varchar(100);

@@ -76,5 +76,18 @@ public class IssueController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<IssueResponseDTO> deleteIssue(@PathVariable Long id) {
+        Optional<Issue> issueFound = issueRepository.findById(id);
+        if (issueFound.isPresent()) {
+            Issue issue = issueFound.get();
+            issueRepository.delete(issue);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }

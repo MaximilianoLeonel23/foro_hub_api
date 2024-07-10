@@ -4,10 +4,13 @@ import foro.hub.api.domain.issues.Issue;
 import foro.hub.api.domain.issues.IssueRegistryDTO;
 import foro.hub.api.domain.issues.IssueRepository;
 import foro.hub.api.domain.issues.IssueResponseDTO;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/issues")
@@ -17,8 +20,23 @@ public class IssueController {
     private IssueRepository issueRepository;
 
     @GetMapping
-    public ResponseEntity<String> getAllIssues() {
-        return ResponseEntity.ok("This is an issue");
+    public ResponseEntity<List<IssueResponseDTO>> getAllIssues() {
+        List<IssueResponseDTO> issuesFound = issueRepository.findAll().stream()
+                .map(issue -> new IssueResponseDTO(
+                        issue.getId(),
+                        issue.getTitle(),
+                        issue.getMessage(),
+                        issue.getCreated_at(),
+                        issue.getStatus(),
+                        issue.getAuthor(),
+                        issue.getCourse()))
+                .toList();
+
+        if (!issuesFound.isEmpty()) {
+            return ResponseEntity.ok(issuesFound);
+        } else {
+            return null;
+        }
     }
 
     @PostMapping
@@ -37,5 +55,10 @@ public class IssueController {
         );
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity<IssueResponseDTO> updateIssue(@RequestBody @Valid )
+
 
 }

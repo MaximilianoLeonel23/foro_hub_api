@@ -89,5 +89,24 @@ public class IssueController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<IssueResponseDTO> getDetailedIssue(@PathVariable Long id) {
+        Optional<Issue> issueFound = issueRepository.findById(id);
+        if (issueFound.isPresent()) {
+            Issue issue = issueFound.get();
+            return ResponseEntity.ok(new IssueResponseDTO(
+                    issue.getId(),
+                    issue.getTitle(),
+                    issue.getMessage(),
+                    issue.getCreated_at(),
+                    issue.getStatus(),
+                    issue.getAuthor(),
+                    issue.getCourse()
+            ));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }

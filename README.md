@@ -1,0 +1,1 @@
+ForoHub Alura es una aplicación backend que proporciona una API para realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) en un sistema de gestión de issues.

@@ -6,7 +6,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +40,7 @@ public class IssueController {
     }
 
     @PostMapping
-    public ResponseEntity<IssueResponseDTO> createIssue(@RequestBody @Valid IssueRegistryDTO issueRegistryDTO) {
+    public ResponseEntity<IssueResponseDTO> createIssue(@RequestBody @Valid IssueRegistryDTO issueRegistryDTO, UriComponentsBuilder uriComponentsBuilder) {
         Issue issue = new Issue(issueRegistryDTO);
         Issue savedIssue = issueRepository.save(issue);
         IssueResponseDTO response = new IssueResponseDTO(
@@ -51,7 +53,8 @@ public class IssueController {
                 savedIssue.getCourse()
 
         );
-        return ResponseEntity.ok(response);
+        URI uri = uriComponentsBuilder.path("/issues/{id}").buildAndExpand(savedIssue.getId()).toUri();
+        return ResponseEntity.created(uri).body(response);
     }
 
     @PutMapping("/{id}")

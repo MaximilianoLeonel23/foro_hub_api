@@ -19,9 +19,6 @@ public class Issue {
     private String message;
     private Date created_at;
     private String status;
-    /*
-    private String autor;
-    private String curso;
-    */
-
+    private String author;
+    private String course;
 }

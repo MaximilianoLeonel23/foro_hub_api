@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository; // Punto y coma añadido
+    private UserRepository userRepository;
 
 
     @Override
